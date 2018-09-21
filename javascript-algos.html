@@ -1,4 +1,4 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+
 <h3>
     Messages App
     <button onclick="clearMessages()">
@@ -59,8 +59,8 @@
     }
 
     function clearMessages() {
-        /*TODO CLEAR MESSAGES FROM DOCUMENT WHEN USER CLICKS THE [CLEAR MESSAGES] BUTTON */
         /* EXTRA CREDIT INCLUDE A SCRIPT TAG THATS FETCHES BOOTSTRAP CSS STLYINGS AND STYLE THE BUTTONS */
+        document.getElementById('messagesContainer').innerHTML = '';
     }
 
     function addPlainMessage() {
@@ -93,8 +93,7 @@
         clearUserInput();
     }
     
-    //TODO SET THE FLAG TO FALS ONCE YOU UNDERSTAND THE ASSIGNMENT
-    const instructionsFlag = true;
+    const instructionsFlag = false;
     if (instructionsFlag) {
         console.log(`README`);
         console.log(`
@@ -131,7 +130,8 @@
             firstName: 'Horace',
             lastName: 'Grant',
             handle: '@HGrant'
-        }
+        },
+        
     ];
 
     const userMessages = [];
