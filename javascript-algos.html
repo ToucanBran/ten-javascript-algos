@@ -19,7 +19,7 @@
         Enter
     </button>
 </div>
-
+<script type="text/javascript" src="./node_modules/lodash/lodash.js"></script>
 <script>
     function clearNames() {
         var rootDiv = document.getElementById('listContainer');
@@ -80,11 +80,7 @@
         handleSpan.style['color'] = 'dodgerblue';
         handleText = document.createTextNode(handle);
         handleSpan.appendChild(handleText);
-        // TODO:: EXCLUDING THE ORIGINALLY TYPED USER NAME REPLACE THIS TEXT \
-        //        WITH ANY ADDITIONAL USER TEXT FROM THE ORIGIN USER TEXT MESSAGE
-        var dummyText = 'TODO:: EXCLUDING THE ORIGINALLY TYPED USER NAME REPLACE THIS TEXT \
-                         WITH ANY ADDITIONAL USER TEXT FROM THE ORIGIN USER TEXT MESSAGE';
-        var messageText = document.createTextNode(`${dummyText} `);
+        var messageText = document.createTextNode(` ${getUserText().replace(/@\w+/, '')}`);
         messageDiv.appendChild(handleSpan);
         messageDiv.appendChild(messageText);
         messagesContainer.appendChild(messageDiv);
@@ -106,10 +102,6 @@
         `);
     }
     
-
-    /* TODO ADD ADDITONALY 
-       OBJECTS LIKE THE ONES BELOW, MINIMUM OF TEN.  
-       EACH MUST CONTAIN A FIRST AND LAST NAME AND HANDLE */
     const userNames = [
         {
             firstName: 'Chandler',
@@ -131,7 +123,12 @@
             lastName: 'Grant',
             handle: '@HGrant'
         },
-        
+        this.createPerson('theodore', 'dog'),
+        this.createPerson('Dwight', 'Schrute'),
+        this.createPerson('Brandon', 'Gomez'),
+        this.createPerson('Elliot', 'Dixon'),
+        this.createPerson('Diane', 'Xavier'),
+        this.createPerson('Emildese', 'Gerschwin'),
     ];
 
     const userMessages = [];
@@ -185,28 +182,11 @@
             nameElm.setAttribute('class', 'filtered-name');
             var text = document.createTextNode(`${name.firstName} ${name.lastName}`);
             nameElm.appendChild(text);
-            namesContainer.appendChild(nameElm);
-            
-            /* 
-                TODO :: ADD CLICK EVENT LISTENER [addEventListener] TO EACH NAME ELEMENT.
-                IF THE USER CLICKS ON A FILTERED NAME THEN THEN A MESSAGE IS OUTPUT
-                USING THE ADD MESSAGE FUNCTION THAT REPLACES THE USER name WITH THE USER HANDLE.
-                THE addHandleMessage FUNCTION SHOULD BE INVOKED FROM INSIDE THE CALLBACK OF THE EVENT LISTENER.
-
-                TIPS:
-                    BRUTE FORCE :: ASIGN A UNIQUE ID TO EACH NAME ELEMENT, GRAB ID FROM THE EVENT AND
-                                   PASS IT AS AN ARGUMENT TO ADD MESSAGE FUNCTION THEN SEARCH USER NAMES ARRAY
-                    
-                    DATA ATTRIBUTE :: ASSIGN A DATA ATTRIBUTE CALLED [handle] TO EACH THE NAME ELEMENT
-                                      GRAB DATA ATTRIBUTE FROM THE EVENT AND PASS IT AS AN ARGUMENT TO 
-                                      ADD MESSAGE FUNCTION THEN SEARCH USER NAMES ARRAY
-
-                EXAMPLE: @chandler => @CGegg
-            */
-
-            //TODO WRAP THIS FUNCTION WITH EVENT LISTENER AND UNCOMMENT IT
-            //TODO REPLACE [myHandle] WITH THE USERS CORRECT HANDLE
-            // addHandleMessage('myHandle'); 
+            nameElm.setAttribute('data-handle', name.handle);
+            nameElm.addEventListener('click', function(event) {
+                addHandleMessage(event.target.dataset.handle); 
+            });
+            namesContainer.appendChild(nameElm);        
 
         });
         document.body.appendChild(namesContainer);
@@ -243,13 +223,26 @@
             console.log('MISSING @ IN USER TEXT');
         }
     }
+
+    function createPerson(firstName, lastName) {
+        if (firstName && lastName) {
+            // yes, I should check for duplicate handles but the dev is the only
+            // one who can create users and I trust myself not to create dups at the moment.
+            return  {
+                firstName: firstName.charAt(0).toUpperCase() + firstName.slice(1),
+                lastName: lastName.charAt(0).toUpperCase() + lastName.slice(1),
+                handle: `@${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}${lastName.slice(1)}`
+            }
+        }
+        return null;
+    }
     // TODO UPDATE THE DEBOUNCE DELAY TO MORE CLOSELY RESEMBLE USER TYPING
     document.addEventListener("DOMContentLoaded", function(event) {
         document.getElementById('inputText').addEventListener(
             'input',
             debounce(
                 searchNames,
-                20000
+                1000
             )
         );
         initDocument();
